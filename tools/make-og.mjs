@@ -74,7 +74,7 @@ for (const file of (await readdir(postsDir)).filter((f) => f.endsWith('.md'))) {
   // Draft share images are publicly fetchable once deployed, and each one renders
   // the unpublished title and description as text. Generate them at publish time.
   if (fm.draft !== 'false') {
-    console.log(`  – skipped og/post-${file.replace(/\.md$/, '')}.png (draft)`);
+    console.log(`  – skipped og/post-${file.replace(/(\.draft)?\.md$/, '')}.png (draft)`);
     continue;
   }
   await shot(`post-${file.replace(/\.md$/, '')}`, {
