@@ -44,6 +44,8 @@
   --radius:       14px;
   --radius-sm:    8px;
 
+  --icon-external: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'%3E%3Cpath d='M2.6 7.4 7.4 2.6M3.8 2.6h3.6v3.6' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+
   --shadow: 0 1px 2px rgba(0,0,0,.4), 0 12px 40px -12px rgba(0,0,0,.6);
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -308,4 +310,30 @@ h2.eyebrow, h3.eyebrow { font-weight: 400; line-height: 1.4; }
   .prose a[href^="http"]::after { content: " (" attr(href) ")"; font-size: .85em; color: #555; }
   pre, blockquote, figure { break-inside: avoid; }
   h1, h2, h3 { break-after: avoid; }
+}
+
+
+/* ------------------------------------------------- external links --- */
+
+/* A quiet mark so leaving the site is visible. Links still open in the same
+   tab: forcing target="_blank" takes the choice away from the reader, breaks
+   the back button, and moves them to a new context without warning.
+   Drawn with a mask rather than a text glyph so screen readers don't announce
+   "north east arrow" after every citation — it is decoration, and the link
+   text already says where it goes. `.link-arrow` is excluded because it
+   carries its own arrow. */
+a[href^="http"]:not([href*="fathomforge.dev"]):not(.link-arrow):not(.brand)::after {
+  content: "";
+  display: inline-block;
+  width: .58em;
+  height: .58em;
+  margin-left: .25em;
+  vertical-align: baseline;
+  background-color: currentColor;
+  opacity: .5;
+  -webkit-mask: var(--icon-external) center / contain no-repeat;
+          mask: var(--icon-external) center / contain no-repeat;
+}
+a[href^="http"]:not([href*="fathomforge.dev"]):not(.link-arrow):not(.brand):hover::after {
+  opacity: 1;
 }
