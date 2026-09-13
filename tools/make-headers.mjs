@@ -57,7 +57,6 @@ const COMMON = [
   // No feature on this site needs any of these.
   'Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=()',
   'Cross-Origin-Opener-Policy: same-origin',
-  'Cross-Origin-Resource-Policy: same-origin',
   'Strict-Transport-Security: max-age=63072000; includeSubDomains; preload',
 ];
 
@@ -145,6 +144,10 @@ const lines = [
   '# Immutable, content-hashed assets.',
   '/_astro/*',
   '  Cache-Control: public, max-age=31536000, immutable',
+  // CORP is set per-path, never on /*: Cloudflare APPENDS the headers from every
+  // matching rule, so a value here plus a different one on /* would ship both and
+  // contradict itself — the same trap as duplicate CSP headers.
+  '  Cross-Origin-Resource-Policy: same-origin',
   '',
   '/og/*',
   '  Cache-Control: public, max-age=604800',
