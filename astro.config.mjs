@@ -23,5 +23,9 @@ export default defineConfig({
     // Code blocks here are short and few; plain <pre><code> styled by our own
     // stylesheet keeps "no inline styles anywhere" true in every browser.
     syntaxHighlight: false,
+    // Off, so posts use the same straight quotes as the hand-written pages.
+    // With it on, only markdown got curly quotes and the site disagreed with
+    // itself — most visibly on a post page, between its excerpt and its body.
+    smartypants: false,
   },
 });

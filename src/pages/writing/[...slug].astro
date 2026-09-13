@@ -128,7 +128,20 @@ const minutes = readingTime(post.body);
   .body :global(ul), .body :global(ol) { padding-left: 1.25rem; }
   .body :global(li) { margin-bottom: .5rem; }
   .body :global(a) { color: var(--accent); }
-  .body :global(pre) { margin: 1.8rem 0; }
+  .body :global(table) { border-collapse: collapse; width: 100%; margin: 1.8rem 0; }
+  .body :global(th) { text-align: left; font-weight: 500; }
+  .body :global(th), .body :global(td) {
+    padding: .5rem .9rem .5rem 0;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+  /* Code is wider than comfortable prose. Let it use the title column's width
+     rather than forcing a horizontal scroll to read one identifier. */
+  .body :global(pre) {
+    margin: 1.8rem 0;
+    width: 44rem;
+    max-width: calc(100vw - 2 * var(--gutter));
+  }
   .body :global(pre code) {
     background: none;
     border: 0;

@@ -62,6 +62,9 @@ const isActive = (href: string) =>
     const next = root.dataset.theme === 'light' ? 'dark' : 'light';
     root.dataset.theme = next;
     label();
+    // Keep mobile browser chrome in step with the page.
+    document.querySelector('meta[name="theme-color"]')
+      ?.setAttribute('content', next === 'dark' ? '#090C11' : '#FBFAF7');
     try { localStorage.setItem('ff-theme', next); } catch (_) { /* non-fatal */ }
   });
 </script>

@@ -230,7 +230,11 @@ section { padding-block: clamp(4rem, 9vw, 7.5rem); }
   border: 1px solid var(--line-strong);
   color: var(--fg-muted);
 }
-.tag[data-variant="live"] { color: var(--ok); border-color: rgba(74,222,128,.35); }
+.tag[data-variant="live"] {
+  color: var(--ok);
+  border-color: rgba(74,222,128,.35);
+  text-transform: none; /* keeps the v in v0.7.0 lowercase */
+}
 
 .link-arrow {
   font-family: var(--font-mono);
@@ -249,8 +253,10 @@ section { padding-block: clamp(4rem, 9vw, 7.5rem); }
   position: absolute;
   left: -9999px;
   top: 0;
-  background: var(--accent);
-  color: #08090C;
+  /* Accent-on-dark-text measured 3.12:1 in the light theme. Inverting against
+     the foreground colour clears AA in both. */
+  background: var(--fg);
+  color: var(--bg);
   padding: .6rem 1rem;
   z-index: 100;
 }

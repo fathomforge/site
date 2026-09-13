@@ -19,7 +19,7 @@
 const ladder = [
   { t: '00:41', level: 'warn',  text: 'spend 60% of run cap — operator notified' },
   { t: '01:07', level: 'block', text: 'tool call blocked — rate 48/min over limit' },
-  { t: '01:52', level: 'end',   text: 'run ended at cap — context preserved' },
+  { t: '01:52', level: 'end',   text: 'run ended — next call would exceed cap' },
 ];
 
 /** Gridline positions, derived from the same scale the paths are drawn on. */
@@ -38,7 +38,7 @@ const RUNAWAY = `${SHARED} C510,188 545,140 570,100 C590,68 604,52 614,40`;
 <figure class="sim">
   <div class="sim__chart">
     <svg viewBox="0 0 720 360" role="img"
-         aria-label="Cumulative spend across one agent run, plotted twice on a linear scale from zero to about forty-one dollars. Unguarded, the line climbs past the twenty-five dollar cap and leaves the top of the chart on its way to one hundred and sixty-nine dollars. With Belay, the pause ladder engages at the warn, block and end-run thresholds and the line flattens at twenty-three dollars eighty, just under the cap.">
+         aria-label="Cumulative spend across one agent run, plotted twice on a linear scale with gridlines at ten, twenty and thirty dollars. Unguarded, the line climbs past the twenty-five dollar cap and leaves the top of the chart on its way to one hundred and sixty-nine dollars. With Belay, the pause ladder engages at the warn, block and end-run thresholds and the line flattens at twenty-three dollars eighty, just under the cap.">
       <defs>
         <linearGradient id="runawayFill" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%"   stop-color="var(--danger)" stop-opacity=".20"/>
@@ -108,7 +108,9 @@ const RUNAWAY = `${SHARED} C510,188 545,140 570,100 C590,68 604,52 614,40`;
     operator in a public OpenClaw issue: a 517K-token context re-sent down a chain of pricier
     models — <a href="https://github.com/openclaw/openclaw/issues/38248" rel="noopener">$169,
     6,000 requests, 296M tokens</a>, in a single session. Nothing crashed, which is why
-    nobody noticed.
+    nobody noticed. The second line and the event log are <strong>what Belay would have done
+    to that run</strong> under a $25 cap — a projection from the configured limits, not a
+    second measurement.
   </figcaption>
 </figure>
 
