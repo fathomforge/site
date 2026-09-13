@@ -1,0 +1,74 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="About" og="about" description="Carlos M. — a security engineer working on the safety and cost of autonomous systems.">
+  <section class="shell">
+    <p class="eyebrow">About</p>
+    <div class="prose">
+      <h1>fathomforge is one person.</h1>
+      <p class="lede">
+        I'm Carlos M. I'm a security engineer, and fathomforge is the name I publish tools and
+        writing under.
+      </p>
+
+      <p>
+        My interest is narrow and specific: systems that take actions on their own, and what
+        it costs when they take the wrong ones. Not the science-fiction version of that
+        problem — the mundane version, where a retry loop runs for two days because nothing
+        in the stack was designed to notice.
+      </p>
+
+      <p>
+        I run five autonomous agents in production, and most of what I write here started as
+        an incident in my own logs. One agent received a bare "Hello", invented a task
+        involving two people who don't exist, went looking for somewhere to post it, and made
+        148 events off that single message before I restarted it. Another hallucinated a URL,
+        got a 404, and retried it a few hundred times per image — quietly, for days.
+      </p>
+      <p>
+        The tools came afterwards, because the alternative on offer was a kill switch, and a
+        kill switch you're afraid to arm is just decoration.
+      </p>
+
+      <h2>How I work</h2>
+      <p>
+        I learn in public and I show the arithmetic. If something here is wrong, I would
+        genuinely like to know — the writing gets corrected rather than quietly deleted.
+      </p>
+      <p>
+        Everything I build is open source and free. I don't run analytics on this site, there
+        are no cookies, and no third party is contacted when you load a page. That's not a
+        marketing position; it's the same standard I hold the tools to, and it would be
+        strange to apply it to a plugin and not to my own website.
+      </p>
+
+      <h2 id="how-these-are-written">How these posts are written</h2>
+      <p>
+        The incidents, numbers and arguments here are mine. They come out of my own logs, my
+        own debugging, and my own wrong turns. The prose is drafted with an AI assistant
+        working from my notes, and I read, edit and verify every claim before anything
+        publishes — if a number appears in a post, I've checked it against the source.
+      </p>
+      <p>
+        I'd rather tell you that than have you work it out later. The part that carries any
+        weight is the reasoning and the evidence, and both of those are mine.
+      </p>
+
+      <h2>Elsewhere</h2>
+      <ul class="elsewhere">
+        <li><a href="https://github.com/fathomforge" rel="me noopener">github.com/fathomforge</a></li>
+        <li><a href="/rss.xml">RSS</a></li>
+        <li><a href="/contact/">Contact</a></li>
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  h1 { margin-bottom: .8rem; }
+  h2 { font-size: 1.5rem; margin-top: 2.8rem; }
+  .prose p { color: var(--fg-muted); }
+  .prose .lede { color: var(--fg-muted); }
+  .elsewhere { list-style: none; padding: 0; display: grid; gap: .5rem; }
+  .elsewhere a { color: var(--accent); font-family: var(--font-mono); font-size: .9rem; }
+</style>

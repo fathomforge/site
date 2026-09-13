@@ -1,0 +1,6 @@
+# Security contact for fathomforge.dev and the projects published under it.
+Contact: mailto:carlos@fathomforge.dev
+Expires: 2027-09-10T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://fathomforge.dev/.well-known/security.txt
+Policy: https://github.com/fathomforge/belay/blob/main/SECURITY.md

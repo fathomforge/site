@@ -1,0 +1,72 @@
+---
+import Base from '../layouts/Base.astro';
+
+const email = 'carlos@fathomforge.dev';
+---
+<Base title="Contact" og="contact" description="How to reach Carlos M. at fathomforge.">
+  <section class="shell">
+    <div class="prose">
+      <p class="eyebrow">Contact</p>
+      <h1>Get in touch</h1>
+      <p class="lede">
+        The fastest way to reach me is email. I read everything and reply to most things,
+        usually within a few days.
+      </p>
+
+      <a class="email" href={`mailto:${email}`}>{email}</a>
+
+      <p class="note">
+        No form, no tracking pixel, no autoresponder sequence. It goes straight to my inbox.
+      </p>
+
+      <hr />
+
+      <h2>Worth writing about</h2>
+      <ul class="reasons">
+        <li>
+          <strong>Security issues in my tools.</strong> Please use the disclosure process in
+          <a href="https://github.com/fathomforge/belay/blob/main/SECURITY.md" rel="noopener">SECURITY.md</a>
+          rather than a public issue.
+        </li>
+        <li>
+          <strong>Bugs and feature requests.</strong>
+          <a href="https://github.com/fathomforge/belay/issues" rel="noopener">GitHub issues</a>
+          are better than email — other people benefit from the answer.
+        </li>
+        <li>
+          <strong>Corrections.</strong> Wrong numbers, bad reasoning, a claim that doesn't
+          survive contact with your setup — send it and I'll amend the post.
+        </li>
+        <li>
+          <strong>Anything else.</strong> If you're working on something in this area, I'm
+          always glad to hear about it.
+        </li>
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  h1 { margin-bottom: .8rem; }
+  h2 { font-size: 1.5rem; margin-top: 0; }
+  .prose p { color: var(--fg-muted); }
+
+  .email {
+    display: inline-block;
+    margin: 2rem 0 .75rem;
+    font-family: var(--font-mono);
+    font-size: clamp(1.05rem, 2.6vw, 1.45rem);
+    color: var(--accent);
+    text-decoration: none;
+    padding-bottom: .3rem;
+    border-bottom: 1px solid var(--accent-dim);
+    transition: border-color .25s var(--ease);
+  }
+  .email:hover { border-bottom-color: var(--accent); }
+  .note { font-size: .875rem; color: var(--fg-faint); }
+
+  .reasons { list-style: none; padding: 0; display: grid; gap: 1.1rem; }
+  .reasons li { color: var(--fg-muted); font-size: .95rem; line-height: 1.65; }
+  .reasons strong { color: var(--fg); font-weight: 500; }
+  .prose a { color: var(--accent); }
+</style>

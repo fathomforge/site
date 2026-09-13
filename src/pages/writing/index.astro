@@ -1,0 +1,72 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getPosts, formatDate } from '../../lib/posts';
+const posts = await getPosts();
+---
+<Base title="Writing" og="writing" description="Notes on autonomous agents, runaway cost, and the security of systems that act on their own.">
+  <section class="shell">
+    <p class="eyebrow">Writing</p>
+    <h1>Notes from production</h1>
+    <p class="lede">
+      Incidents, post-mortems and design arguments from running autonomous agents that
+      spend real money. Mostly about the failures that don't look like failures.
+    </p>
+
+    {posts.length === 0 ? (
+      <p class="empty">Nothing published yet — the first pieces are in draft.</p>
+    ) : (
+      <ul class="list">
+        {posts.map((p) => (
+          <li>
+            <a class="row" href={`/writing/${p.id}/`}>
+              <time class="mono-label" datetime={p.data.date.toISOString()}>
+                {formatDate(p.data.date)}
+              </time>
+              <div>
+                <h2>{p.data.title}{p.data.draft && <span class="draft">draft</span>}</h2>
+                <p>{p.data.description}</p>
+              </div>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+  </section>
+</Base>
+
+<style>
+  h1 { margin-bottom: .6rem; }
+  .list { list-style: none; margin: 3.5rem 0 0; padding: 0; }
+  .list li + li { border-top: 1px solid var(--line); }
+  .row {
+    display: grid;
+    grid-template-columns: 11rem 1fr;
+    gap: 1.5rem;
+    padding: 1.9rem 0;
+    text-decoration: none;
+  }
+  .row time { padding-top: .45rem; }
+  .row h2 {
+    font-size: 1.35rem;
+    margin: 0 0 .35rem;
+    transition: color .25s var(--ease);
+    display: flex; align-items: center; gap: .7rem; flex-wrap: wrap;
+  }
+  .row:hover h2 { color: var(--accent); }
+  .row p { margin: 0; color: var(--fg-muted); font-size: .95rem; max-width: 66ch; }
+  .draft {
+    font-family: var(--font-mono);
+    font-size: .6rem;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--danger);
+    border: 1px solid var(--danger);
+    border-radius: 4px;
+    padding: .15em .45em;
+  }
+  .empty { color: var(--fg-faint); margin-top: 3rem; }
+  @media (max-width: 720px) {
+    .row { grid-template-columns: 1fr; gap: .5rem; }
+    .row time { padding-top: 0; }
+  }
+</style>

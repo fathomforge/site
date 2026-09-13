@@ -1,0 +1,277 @@
+---
+/**
+ * The homepage's signature figure: one agent run, plotted twice.
+ *
+ * The $169 figure is NOT ours — it comes from a public upstream issue filed by another
+ * operator. The figcaption says so, and it must keep saying so.
+ *
+ * Scale is explicit and honest. The y-axis is linear at 6.8 user units per
+ * dollar ($0 at y=320, the $25 cap at y=150), so the guarded series is drawn
+ * true to its stated value. The unguarded run reached $169, which on that scale
+ * would sit at y=-829 — far off any sane frame — so it deliberately exits the
+ * top of the plot and is labelled as off-scale rather than being quietly
+ * squashed to fit. A chart that undersells its own number by 4x on a site about
+ * showing the arithmetic would be the wrong kind of irony.
+ *
+ * Renders complete without JavaScript; the animation is CSS-only and yields to
+ * reduced-motion.
+ */
+const ladder = [
+  { t: '00:41', level: 'warn',  text: 'spend 60% of run cap — operator notified' },
+  { t: '01:07', level: 'block', text: 'tool call blocked — rate 48/min over limit' },
+  { t: '01:52', level: 'end',   text: 'run ended at cap — context preserved' },
+];
+
+/** Gridline positions, derived from the same scale the paths are drawn on. */
+const ticks = [
+  { usd: '$30', y: 116 },
+  { usd: '$20', y: 184 },
+  { usd: '$10', y: 252 },
+];
+
+// Both runs are the same run until enforcement changes the spend, so the two
+// paths share their opening segment exactly.
+const SHARED = 'M64,320 C200,314 300,302 380,270 C410,258 432,244 470,218';
+const BELAY = `${SHARED} C500,199 518,193 540,189 C566,180 585,164 600,158 L688,158`;
+const RUNAWAY = `${SHARED} C510,188 545,140 570,100 C590,68 604,52 614,40`;
+---
+<figure class="sim">
+  <div class="sim__chart">
+    <svg viewBox="0 0 720 360" role="img"
+         aria-label="Cumulative spend across one agent run, plotted twice on a linear scale from zero to about forty-one dollars. Unguarded, the line climbs past the twenty-five dollar cap and leaves the top of the chart on its way to one hundred and sixty-nine dollars. With Belay, the pause ladder engages at the warn, block and end-run thresholds and the line flattens at twenty-three dollars eighty, just under the cap.">
+      <defs>
+        <linearGradient id="runawayFill" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stop-color="var(--danger)" stop-opacity=".20"/>
+          <stop offset="100%" stop-color="var(--danger)" stop-opacity="0"/>
+        </linearGradient>
+        <!-- The lines are revealed by sweeping this rect, not by animating
+             stroke-dashoffset — that leaves stroke-dasharray free to tell the
+             two series apart without relying on colour (WCAG 1.4.1). -->
+        <clipPath id="runawayReveal">
+          <rect class="sim__reveal" x="0" y="0" width="720" height="360"/>
+        </clipPath>
+      </defs>
+
+      <g class="sim__grid">
+        {ticks.map((t) => <line x1="64" y1={t.y} x2="688" y2={t.y} />)}
+        <line class="sim__axis" x1="64" y1="320" x2="688" y2="320" />
+      </g>
+
+      <g class="sim__yaxis">
+        {ticks.map((t) => <text x="54" y={t.y + 4}>{t.usd}</text>)}
+        <text x="54" y="324">$0</text>
+      </g>
+
+      <line class="sim__cap" x1="64" y1="150" x2="688" y2="150" />
+      <text class="sim__cap-label" x="70" y="142">CAP · $25.00</text>
+
+      <g clip-path="url(#runawayReveal)">
+        <path class="sim__area" d={`${RUNAWAY} L614,320 Z`} fill="url(#runawayFill)" />
+        <path class="sim__line sim__line--runaway" fill="none" d={RUNAWAY} />
+        <path class="sim__line sim__line--belay"   fill="none" d={BELAY} />
+      </g>
+
+      <!-- The unguarded run leaves the frame; say so rather than implying it stops. -->
+      <text class="sim__offscale" x="626" y="52">&#8593; $169</text>
+
+      <g class="sim__markers">
+        <g><circle cx="470" cy="218" r="5"/><text x="470" y="242">warn</text></g>
+        <g><circle cx="540" cy="189" r="5"/><text x="540" y="213">block</text></g>
+        <g><circle cx="600" cy="158" r="5"/><text x="600" y="182">end run</text></g>
+      </g>
+    </svg>
+  </div>
+
+  <ul class="sim__legend">
+    <li>
+      <span class="sim__swatch sim__swatch--bad" aria-hidden="true"></span>
+      <span>Unguarded — <strong>$169</strong>, off the top of this chart</span>
+    </li>
+    <li>
+      <span class="sim__swatch sim__swatch--good" aria-hidden="true"></span>
+      <span>With Belay — <strong>caught at $23.80</strong></span>
+    </li>
+  </ul>
+
+  <ol class="sim__log">
+    {ladder.map((e) => (
+      <li class="sim__event" data-level={e.level}>
+        <span class="sim__time">{e.t}</span>
+        <span class="sim__level">{e.level}</span>
+        <span class="sim__text">{e.text}</span>
+      </li>
+    ))}
+  </ol>
+
+  <figcaption>
+    One run, plotted twice. The unguarded line follows a failover blowup reported by another
+    operator in a public OpenClaw issue: a 517K-token context re-sent down a chain of pricier
+    models — <a href="https://github.com/openclaw/openclaw/issues/38248" rel="noopener">$169,
+    6,000 requests, 296M tokens</a>, in a single session. Nothing crashed, which is why
+    nobody noticed.
+  </figcaption>
+</figure>
+
+<style>
+  .sim {
+    margin: 0;
+    background: var(--bg-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: clamp(1rem, 2.5vw, 1.75rem);
+    box-shadow: var(--shadow);
+  }
+  .sim__chart svg { display: block; width: 100%; height: auto; }
+
+  .sim__grid line { stroke: var(--line); stroke-width: 1; }
+  .sim__grid .sim__axis { stroke: var(--line-strong); }
+
+  /* Neutral, not accent: the cap and the guarded line sit ~3px apart at desktop
+     scale, and in the same colour they merge into one smear — destroying the
+     whole point of the figure, which is that the line stopped BELOW the line. */
+  .sim__cap {
+    stroke: var(--fg-faint);
+    stroke-width: 1.4;
+    stroke-dasharray: 5 5;
+    opacity: .75;
+  }
+
+  /* SVG text is in viewBox units: the chart renders ~490px wide inside the hero's
+     right column, a scale of ~0.68, so these need to be generous to stay legible. */
+  .sim__cap-label,
+  .sim__yaxis text,
+  .sim__offscale,
+  .sim__markers text {
+    font-family: var(--font-mono);
+    font-size: 18px;
+    letter-spacing: .04em;
+  }
+  .sim__cap-label { fill: var(--fg-faint); }
+  .sim__yaxis text { fill: var(--fg-faint); text-anchor: end; }
+  .sim__offscale { fill: var(--danger); font-weight: 500; }
+  .sim__markers text { fill: var(--fg-muted); text-anchor: middle; font-size: 17px; }
+
+  .sim__line { stroke-linecap: round; stroke-linejoin: round; }
+  .sim__line--runaway { stroke: var(--danger); stroke-width: 2; opacity: .9; stroke-dasharray: 7 5; }
+  .sim__line--belay   { stroke: var(--accent); stroke-width: 2.75; }
+
+  .sim__markers circle {
+    fill: var(--bg-raised);
+    stroke: var(--accent);
+    stroke-width: 2;
+  }
+
+  .sim__legend {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem 1.75rem;
+    margin: 1.1rem 0 0;
+    padding: 0;
+    font-size: .82rem;
+    color: var(--fg-muted);
+  }
+  .sim__legend li { display: flex; align-items: center; gap: .5rem; }
+  .sim__legend strong { color: var(--fg); font-weight: 500; }
+  .sim__swatch { width: 14px; height: 3px; border-radius: 2px; flex: none; }
+  .sim__swatch--bad  {
+    background: repeating-linear-gradient(90deg,
+      var(--danger) 0 4px, transparent 4px 7px);
+  }
+  .sim__swatch--good { background: var(--accent); }
+
+  .sim__log {
+    list-style: none;
+    margin: 1.5rem 0 0;
+    padding: 1.25rem 0 0;
+    border-top: 1px solid var(--line);
+    display: grid;
+    gap: .55rem;
+  }
+  .sim__event {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    gap: .85rem;
+    align-items: baseline;
+    font-family: var(--font-mono);
+    font-size: .78rem;
+  }
+  .sim__time  { color: var(--fg-faint); }
+  .sim__level {
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    font-size: .68rem;
+    padding: .15em .5em;
+    border-radius: 4px;
+    background: var(--accent-dim);
+    color: var(--accent);
+    min-width: 5.4em;
+    text-align: center;
+  }
+  .sim__event[data-level="end"] .sim__level {
+    background: var(--danger-dim);
+    color: var(--danger);
+  }
+  .sim__text { color: var(--fg-muted); }
+
+  figcaption a { color: var(--fg-muted); }
+  figcaption a:hover { color: var(--accent); }
+  figcaption {
+    margin-top: 1.35rem;
+    font-size: .875rem;
+    line-height: 1.6;
+    color: var(--fg-faint);
+    max-width: 62ch;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .sim__reveal {
+      transform-box: view-box;
+      transform-origin: 64px 0;
+      transform: scaleX(0);
+      animation: sweep 1.7s var(--ease) forwards;
+    }
+    .sim__area { opacity: 0; animation: fade .7s ease 1.25s forwards; }
+    .sim__offscale { opacity: 0; animation: rise .5s var(--ease) 1.5s forwards; }
+
+    .sim__markers g { opacity: 0; animation: rise .5s var(--ease) forwards; }
+    .sim__markers g:nth-of-type(1) { animation-delay: .8s; }
+    .sim__markers g:nth-of-type(2) { animation-delay: 1s; }
+    .sim__markers g:nth-of-type(3) { animation-delay: 1.2s; }
+
+    .sim__legend li { opacity: 0; animation: rise .5s var(--ease) forwards; }
+    .sim__legend li:nth-child(1) { animation-delay: 1.35s; }
+    .sim__legend li:nth-child(2) { animation-delay: 1.45s; }
+
+    .sim__event { opacity: 0; animation: rise .5s var(--ease) forwards; }
+    .sim__event:nth-child(1) { animation-delay: .9s; }
+    .sim__event:nth-child(2) { animation-delay: 1.1s; }
+    .sim__event:nth-child(3) { animation-delay: 1.3s; }
+  }
+
+  @keyframes sweep { to { transform: scaleX(1); } }
+  @keyframes fade { to { opacity: 1; } }
+  @keyframes rise { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+
+  @media (max-width: 560px) {
+    .sim__event {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: .2rem .75rem;
+    }
+    .sim__level { min-width: 0; padding-inline: .6em; }
+    .sim__text { flex-basis: 100%; }
+
+    /* Full-bleed here, so the chart is wider than in the hero column but the
+       viewBox still scales down hard. Drop the marker labels — the log names
+       the same three events. */
+    .sim__cap-label,
+    .sim__yaxis text,
+    .sim__offscale { font-size: 23px; }
+    .sim__markers text { display: none; }
+    .sim__line--belay { stroke-width: 4; }
+    .sim__line--runaway { stroke-width: 3; stroke-dasharray: 9 6; }
+    .sim__cap { stroke-width: 2; stroke-dasharray: 8 8; }
+  }
+</style>

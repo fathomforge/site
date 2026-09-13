@@ -1,0 +1,84 @@
+---
+const year = new Date().getFullYear();
+---
+<footer class="foot">
+  <div class="shell foot__inner">
+    <div class="foot__col">
+      <p class="foot__word">fathomforge</p>
+      <p class="foot__note">
+        Security engineering for autonomous systems. Independent, and not affiliated with
+        the OpenClaw Foundation.
+      </p>
+    </div>
+
+    <nav class="foot__col" aria-label="Site">
+      <p class="mono-label">Site</p>
+      <a href="/writing/">Writing</a>
+      <a href="/open-source/">Open Source</a>
+      <a href="/about/">About</a>
+      <a href="/contact/">Contact</a>
+    </nav>
+
+    <nav class="foot__col" aria-label="Elsewhere">
+      <p class="mono-label">Elsewhere</p>
+      <a href="https://github.com/fathomforge" rel="me noopener">GitHub</a>
+      <a href="/rss.xml">RSS</a>
+    </nav>
+  </div>
+
+  <div class="shell foot__base">
+    <p>&copy; {year} fathomforge</p>
+    <p class="foot__privacy">No analytics. No cookies. No third-party requests.</p>
+  </div>
+</footer>
+
+<style>
+  .foot {
+    border-top: 1px solid var(--line);
+    margin-top: 4rem;
+    padding-top: 3.5rem;
+    padding-bottom: 2rem;
+    background: var(--bg-sunken);
+  }
+  .foot__inner {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    gap: 2.5rem;
+    padding-bottom: 3rem;
+  }
+  .foot__col { display: flex; flex-direction: column; gap: .55rem; align-items: flex-start; }
+  .foot__col a {
+    font-size: .9rem;
+    color: var(--fg-muted);
+    text-decoration: none;
+    transition: color .25s var(--ease);
+  }
+  .foot__col a:hover { color: var(--accent); }
+  .foot__word {
+    font-family: var(--font-mono);
+    color: var(--fg);
+    margin: 0 0 .3rem;
+  }
+  .foot__note {
+    font-size: .875rem;
+    color: var(--fg-faint);
+    max-width: 42ch;
+    margin: 0;
+    line-height: 1.6;
+  }
+  .foot__base {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+  }
+  .foot__base p { margin: 0; font-size: .8rem; color: var(--fg-faint); }
+  .foot__privacy { font-family: var(--font-mono); font-size: .74rem !important; }
+
+  @media (max-width: 720px) {
+    .foot__inner { grid-template-columns: 1fr 1fr; }
+    .foot__col:first-child { grid-column: 1 / -1; }
+  }
+</style>

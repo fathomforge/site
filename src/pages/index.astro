@@ -1,0 +1,152 @@
+---
+import Base from '../layouts/Base.astro';
+import RunawaySim from '../components/RunawaySim.astro';
+import { getPosts, formatDate } from '../lib/posts';
+
+const posts = (await getPosts()).slice(0, 3);
+---
+<Base
+  title="fathomforge — security engineering for autonomous systems"
+  bareTitle
+  description="Notes, tools and open-source guardrails for running autonomous agents in production. By Carlos M., a security engineer."
+>
+  <!-- ============================================================ hero -->
+  <section class="hero">
+    <div class="shell hero__grid">
+      <div class="hero__copy">
+        <p class="eyebrow">fathomforge</p>
+        <h1>Agents fail quietly. <br class="hero__break" />That's the expensive part.</h1>
+        <p class="lede">
+          I'm Carlos M., a security engineer. I run five autonomous agents in production and
+          write about what goes wrong with them — then build the open-source guardrails
+          I wanted to exist beforehand.
+        </p>
+        <div class="hero__actions">
+          <a class="link-arrow" href="/writing/">Read the writing <span>&rarr;</span></a>
+          <a class="link-arrow" href="/open-source/">See the tools <span>&rarr;</span></a>
+        </div>
+      </div>
+
+      <div class="hero__figure">
+        <RunawaySim />
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================= writing -->
+  <section class="shell" aria-labelledby="h-writing">
+    <h2 class="eyebrow" id="h-writing">Recent writing</h2>
+    {posts.length === 0 ? (
+      <p class="lede">Nothing published yet.</p>
+    ) : (
+      <ul class="posts">
+        {posts.map((p) => (
+          <li>
+            <a class="post" href={`/writing/${p.id}/`}>
+              <time class="mono-label" datetime={p.data.date.toISOString()}>
+                {formatDate(p.data.date)}
+              </time>
+              <h3>{p.data.title}</h3>
+              <p>{p.data.description}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+    <a class="link-arrow posts__more" href="/writing/">All writing <span>&rarr;</span></a>
+  </section>
+
+  <!-- ===================================================== open source -->
+  <section class="shell" aria-labelledby="h-os">
+    <h2 class="eyebrow" id="h-os">Open source</h2>
+    <div class="os">
+      <div class="os__intro">
+        <h3>Built because the alternative was a kill switch.</h3>
+        <p class="lede">
+          Everything I build here is MIT-licensed, free, and designed to be auditable in an
+          afternoon. No telemetry, no account, no network calls you didn't configure yourself.
+        </p>
+      </div>
+
+      <article class="os__card">
+        <header class="os__head">
+          <h3>Belay</h3>
+          <span class="tag" data-variant="live">v0.7.0</span>
+        </header>
+        <p class="os__tagline">A seatbelt for OpenClaw agents.</p>
+        <p>
+          Spend caps, model-call and tool-call rate limits, and a graceful pause ladder,
+          running inside your gateway. Your agent doesn't get killed — it gets caught.
+        </p>
+        <pre><code>warn → block a tool call → end the run</code></pre>
+        <div class="os__links">
+          <a class="link-arrow" href="https://github.com/fathomforge/belay" rel="noopener">
+            GitHub <span>&rarr;</span>
+          </a>
+          <a class="link-arrow" href="https://www.npmjs.com/package/@fathomforge/belay" rel="noopener">
+            npm <span>&rarr;</span>
+          </a>
+        </div>
+      </article>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero { padding-block: clamp(3rem, 7vw, 5.5rem) clamp(3rem, 6vw, 5rem); }
+  .hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: center;
+  }
+  .hero__copy h1 { margin-bottom: 1.1rem; }
+  /* Below this the column is too narrow for the forced break to help; let
+     text-wrap: balance choose instead of stranding "part." on its own line. */
+  @media (max-width: 1150px) { .hero__break { display: none; } }
+  .hero__actions { display: flex; gap: 1.75rem; margin-top: 1.9rem; flex-wrap: wrap; }
+
+  @media (max-width: 940px) {
+    .hero__grid { grid-template-columns: 1fr; }
+  }
+
+  /* posts */
+  .posts { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; }
+  .posts li + li { border-top: 1px solid var(--line); }
+  .post {
+    display: block;
+    text-decoration: none;
+    padding: 1.6rem 0;
+    transition: opacity .25s var(--ease);
+  }
+  .post h3 { margin: .45rem 0 .3rem; transition: color .25s var(--ease); }
+  .post:hover h3 { color: var(--accent); }
+  .post p { margin: 0; color: var(--fg-muted); max-width: 68ch; font-size: .95rem; }
+  .posts__more { margin-top: 1.9rem; }
+
+  /* open source */
+  .os {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 4vw, 3.5rem);
+    align-items: start;
+  }
+  .os__intro h3 { font-size: clamp(1.6rem, 3vw, 2.1rem); margin-bottom: .7rem; }
+  .os__card {
+    background: var(--bg-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 1.75rem;
+    box-shadow: var(--shadow);
+  }
+  .os__head { display: flex; align-items: center; gap: .8rem; margin-bottom: .2rem; }
+  .os__head h3 { margin: 0; }
+  .os__tagline { color: var(--accent); font-size: .95rem; margin-bottom: .9rem; }
+  .os__card p { color: var(--fg-muted); font-size: .95rem; }
+  .os__card pre { margin: 1.1rem 0; font-size: .78rem; }
+  .os__links { display: flex; gap: 1.5rem; }
+
+  @media (max-width: 860px) {
+    .os { grid-template-columns: 1fr; }
+  }
+</style>
