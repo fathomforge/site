@@ -64,15 +64,6 @@ const isActive = (href: string) =>
     label();
     try { localStorage.setItem('ff-theme', next); } catch (_) { /* non-fatal */ }
   });
-
-  // Follow the OS only while the visitor has not chosen for themselves.
-  window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
-    let saved = null;
-    try { saved = localStorage.getItem('ff-theme'); } catch (_) { /* ignore */ }
-    if (saved) return;
-    root.dataset.theme = e.matches ? 'light' : 'dark';
-    label();
-  });
 </script>
 
 <style>

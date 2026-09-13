@@ -3,6 +3,9 @@
    Dark-first, editorial-technical. One accent ("rope amber") used sparingly.
    ========================================================================== */
 
+/* The site defaults to light. These :root values are the DARK palette and apply
+   only when [data-theme="dark"] is set — see the override block below, which the
+   markup's data-theme="light" activates on first paint. */
 :root {
   color-scheme: dark;
 

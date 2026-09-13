@@ -54,7 +54,7 @@ const schema = type === 'article'
     };
 ---
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="light">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -63,9 +63,10 @@ const schema = type === 'article'
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
 
-    <meta name="theme-color" content="#090C11" media="(prefers-color-scheme: dark)" />
-    <meta name="theme-color" content="#FBFAF7" media="(prefers-color-scheme: light)" />
-    <meta name="color-scheme" content="dark light" />
+    <!-- The site defaults to light regardless of OS preference, so theme-color
+         cannot key off prefers-color-scheme. -->
+    <meta name="theme-color" content="#FBFAF7" />
+    <meta name="color-scheme" content="light dark" />
 
     <meta property="og:type" content={type} />
     <meta property="og:site_name" content={SITE_NAME} />
@@ -92,15 +93,14 @@ const schema = type === 'article'
 
     <script type="application/ld+json" is:inline set:html={JSON.stringify(schema)} />
 
-    <!-- Theme is restored before first paint to avoid a flash. -->
+    <!-- Restored before first paint to avoid a flash. Light is the default for
+         everyone; the OS preference is deliberately not consulted, so a visitor
+         sees the same site until they choose otherwise. -->
     <script is:inline>
       try {
         const saved = localStorage.getItem('ff-theme');
-        const theme = (saved === 'light' || saved === 'dark')
-          ? saved
-          : (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
-        document.documentElement.dataset.theme = theme;
-      } catch (_) { /* private mode, blocked storage — keep the default */ }
+        document.documentElement.dataset.theme = saved === 'dark' ? 'dark' : 'light';
+      } catch (_) { /* private mode, blocked storage — the markup default stands */ }
     </script>
   </head>
   <body>
